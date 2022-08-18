@@ -1,11 +1,14 @@
 const { Router } = require('express');
+const { getCategories, getCategoryById, getWordByCategory, insertCategory, updateCategory } = require('../controllers/category.controller');
+const { validateInsertCategory, validateIdCategory, validateUpdateCategory } = require("../validators/category.validator");
 
 const router = Router();
 
-// router.get('/')
-// router.get('/:id');
-// router.post('/');
-// router.put('/');
-// router.delete('/');
+router.get('/', getCategories)
+router.get('/:id', validateIdCategory, getCategoryById);
+router.get('/:id/words', validateIdCategory, getWordByCategory);
+router.post('/', validateInsertCategory, insertCategory);
+router.put('/', validateUpdateCategory, updateCategory);
+router.delete('/:id', validateIdCategory);
 
 module.exports = router;

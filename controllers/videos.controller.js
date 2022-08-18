@@ -8,7 +8,7 @@ const getVideos = async (req = request, res = response) => {
       return res.status(200).json(printToJson(200, "success", videos));
    } catch (error) {
       console.error(error)
-      return res.status(500).json(printToJson());
+      return res.status(500).json(printToJson(500, error.message));
    }
 }
 

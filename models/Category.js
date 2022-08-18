@@ -36,17 +36,86 @@ Word.belongsTo(Category, {
    sourceKey: 'id_category'
 })
 
-const Show = () => { }
+/**
+* @typedef {Object} ICategory
+* @property {Number} [id_category] El Id de la categoria
+* @property {String} description El nombre de la categoria
+* @property {String} icon Url de la imagen de la categoria
+*/
 
-const ShowById = () => { }
+/**
+ * Funcion para recuperar todos las categorias de la base
+ * @returns {Array<ICategory>}
+ */
+const Show = async () => {
+   try {
+      const query = await Category.findAll();
+      return query;
+   } catch (error) {
+      throw new Error(error.message);
+   }
+}
 
-const ShowByField = () => { }
+/**
+ * Funcion para recuperar una categoria de la base por el id
+ * @param {Number} id El id de la categoria a buscar
+ * @returns {ICategory | undefined} Regresa una categoria o undefined si no existe
+ */
+const ShowById = async (id) => {
+   try {
+      const query = await Category.findByPk(id);
+      if (query) {
+         return query.dataValues;
+      }
+      return undefined;
+   } catch (error) {
+      throw new Error(error);
+   }
+}
 
-const Insert = () => { }
+/**
+ * Registra una categoria en la base de datos
+ * @param {ICategory} newCategory Es la nueva categoria a registrar
+ * @returns {ICategory}
+ */
 
-const Update = () => { }
+const Insert = async (newCategory) => {
+   try {
+      return insertedCategory = await Category.create(newCategory);
+   } catch (error) {
+      throw new Error(error);
+   }
+}
 
-const Delete = () => { }
+/**
+ * Funcion para actualizar una categoria de la base
+ * @param {ICategory} newCategory Es la nueva categoria actualizado a registrar
+ * @returns {ICategory}
+ */
+const Update = async (newCategory) => {
+   try {
+      const category = await Category.findByPk(newCategory.id_category);
+      category.description = newCategory.description;
+      category.icon = newCategory.icon;
+      await category.save();
+      return category;
+   } catch (error) {
+      console.table(error);
+      throw new Error(error);
+   }
+}
 
+/**
+ * Funcion para eliminar una categoria
+ * @param {Number} id El id de la categoria a eliminar
+ * @returns {void}
+ */
+const Delete = async (id) => {
+   try {
+      await Category.destroy({ where: { id_category: id } })
+   } catch (error) {
+      throw new Error(error);
+   }
+}
 
-module.exports = { Category, Show, ShowById, ShowByField, Insert, Update, Delete };
+module.exports = { Category, Show, ShowById, Insert, Update, Delete };
