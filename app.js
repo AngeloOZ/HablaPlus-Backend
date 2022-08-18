@@ -16,6 +16,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// prueba ssh
 
 // app.use((req, res) => {
    // res.status(300).redirect('/api');
