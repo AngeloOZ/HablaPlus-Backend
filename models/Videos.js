@@ -20,35 +20,52 @@ const Videos = sequelize.define('VIDEOS', {
 });
 
 const Show = async () => {
-   const query = await Videos.findAll();
-   if(query.length != 0){
-      return query[0].dataValues;
+   try {
+      const query = await Videos.findAll();
+      return query;
+   } catch (error) {
+      throw new Error(error.message);
    }
-   return undefined;
 }
 
 const ShowById = async (id) => {
-   const query = await Videos.findByPk(id);
-   if(query.length != 0){
-      return query.dataValues;
+   try {
+      const query = await Videos.findByPk(id);
+      if (query) {
+         return query.dataValues;
+      }
+      return undefined;
+   } catch (error) {
+      throw new Error(error.message);
    }
-   return undefined;
 }
 
-const ShowByField = () => {
-
+const Insert = async (newVideo = {}) => {
+   try {
+      return insertedVideo = await Videos.create(newVideo);
+   } catch (error) {
+      throw new Error(error.message);
+   }
 }
 
-const Insert = () => {
-
+const Update = async ({ description, id_video, link }) => {
+   try {
+      const video = await Videos.findByPk(id_video);
+      video.description = description;
+      video.link = link;
+      await video.save();
+      return video;
+   } catch (error) {
+      throw new Error(error.message);
+   }
 }
 
-const Update = () => {
-
+const Delete = async (id) => {
+   try {
+      return await Videos.destroy({ where: { id_video: id } })
+   } catch (error) {
+      throw new Error(error.message);
+   }
 }
 
-const Delete = () => {
-
-}
-
-module.exports = { Videos, Show, ShowById, ShowByField, Insert, Update, Delete };
+module.exports = { Videos, Show, ShowById, Insert, Update, Delete };
