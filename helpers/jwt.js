@@ -37,12 +37,12 @@ const singToken = async (payload, expireTime = undefined) => {
  * @param {String} token Es el token a verificar
  * @returns {IUser}
  */
-const verifyToken = async (token) => {
+const verifyToken = (token) => {
    try {
       if (!SECRET_KEY) {
          throw "No hay semilla para firmar el token";
       }
-      return await jwt.verify(token, SECRET_KEY);
+      return jwt.verify(token, SECRET_KEY);
    } catch (error) {
       console.error(error);
       throw error;

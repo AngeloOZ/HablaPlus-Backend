@@ -6,6 +6,7 @@ require("dotenv").config();
 
 const { printToJson } = require('./helpers/printJson');
 const { sequelize } = require('./models/database');
+const validateToken = require('./middlewares/verifyToken');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -26,11 +27,13 @@ app.get('/api', (req, res) => {
    res.status(404).json(printToJson(404, "Bad request"));
 });
 
-app.use('/api/video', require("./routes/videos.routes"));
+app.use('/api/video', validateToken, require("./routes/videos.routes"));
 app.use('/api/category', require("./routes/category.routes"));
 app.use('/api/word', require("./routes/word.routes"));
 app.use('/api/user', require("./routes/user.routes"));
 app.use('/api/auth', require("./routes/auth.routes"));
+app.use('/api/rol', require("./routes/typeUser.routes"));
+app.use('/api/word_learned', require("./routes/wordLearned.routes"));
 
 /* -------------------------------------------------------------------------- */
 /*                        Manejo de errores y servidor                        */

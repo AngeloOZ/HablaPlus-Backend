@@ -1,14 +1,17 @@
 const { Router } = require('express');
-const { getVideos, getVideoById, insertVideo, updateVideo, deleteVideo } = require('../controllers/videos.controller');
+const validateToken = require('../middlewares/verifyToken');
+const checkRols = require('../middlewares/validateRol');
 const { validateInsertVideo, validateIdVideo } = require('../validators/video.validator');
+
+const { getVideos, getVideoById, insertVideo, updateVideo, deleteVideo } = require('../controllers/videos.controller');
 
 const router = Router();
 
-router.get('/', getVideos)
+router.get('/', validateToken, getVideos)
 router.get('/cliente', getVideos)
-router.get('/:id', validateIdVideo, getVideoById);
-router.post('/', validateInsertVideo, insertVideo);
-router.put('/', validateInsertVideo, updateVideo);
-router.delete('/:id', validateIdVideo, deleteVideo);
+router.get('/:id', validateToken, validateIdVideo, getVideoById);
+router.post('/', validateToken, checkRols([1,2]), validateInsertVideo, insertVideo);
+router.put('/', validateToken, validateInsertVideo, updateVideo);
+router.delete('/:id', validateToken, validateIdVideo, deleteVideo);
 
 module.exports = router;
