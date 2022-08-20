@@ -48,11 +48,12 @@ Word_learned.belongsTo(Word, {
  * @returns {Array<IWord>}
  */
 const Show = async () => {
+   const transaction = await sequelize.transaction();
    try {
       const query = await Word.findAll();
       return query;
    } catch (error) {
-      throw new Error(error.message);
+      throw new Error(error);
    }
 }
 
@@ -62,14 +63,24 @@ const Show = async () => {
  * @returns {IWord | undefined} Regresa una palabra o undefined si no existe
  */
 const ShowById = async (id) => {
+   const transaction = await sequelize.transaction();
    try {
       const query = await Word.findByPk(id);
+      await transaction.commit();
       if (query) {
          return query.dataValues;
       }
       return undefined;
    } catch (error) {
-      throw new Error(error.message);
+      await transaction.rollback();
+      const customError = {
+         message: error?.errors[0]?.message,
+         type: error?.errors[0]?.type,
+         path: error?.errors[0]?.path,
+         value: error?.errors[0]?.value,
+         code: error?.parent?.errno || 1048,
+      }
+      throw customError;
    }
 }
 
@@ -79,11 +90,21 @@ const ShowById = async (id) => {
  * @returns {Array<IWord>} 
  */
 const ShowByCategory = async (category) => {
+   const transaction = await sequelize.transaction()
    try {
       const query = await Word.findAll({ where: { id_category: category } });
+      await transaction.commit();
       return query;
    } catch (error) {
-      throw new Error(error.message);
+      await transaction.rollback();
+      const customError = {
+         message: error?.errors[0]?.message,
+         type: error?.errors[0]?.type,
+         path: error?.errors[0]?.path,
+         value: error?.errors[0]?.value,
+         code: error?.parent?.errno || 1048,
+      }
+      throw customError;
    }
 }
 
@@ -93,10 +114,21 @@ const ShowByCategory = async (category) => {
  * @returns {IWord}
  */
 const Insert = async (newWord) => {
+   const transaction = await sequelize.transaction();
    try {
-      return insertedWord = await Word.create(newWord);
+      const insertedWord = await Word.create(newWord);
+      await transaction.commit();
+      return insertedWord;
    } catch (error) {
-      throw new Error(error.message);
+      await transaction.rollback();
+      const customError = {
+         message: error?.errors[0]?.message,
+         type: error?.errors[0]?.type,
+         path: error?.errors[0]?.path,
+         value: error?.errors[0]?.value,
+         code: error?.parent?.errno || 1048,
+      }
+      throw customError;
    }
 }
 
@@ -106,14 +138,24 @@ const Insert = async (newWord) => {
  * @returns {IWord}
  */
 const Update = async (newWord) => {
+   const transaction = await sequelize.transaction();
    try {
       const word = await Word.findByPk(newWord.id_word);
       word.description = newWord.description;
       word.icon = newWord.icon;
       await word.save();
+      await transaction.commit();
       return word;
    } catch (error) {
-      throw new Error(error.message);
+      await transaction.rollback();
+      const customError = {
+         message: error?.errors[0]?.message,
+         type: error?.errors[0]?.type,
+         path: error?.errors[0]?.path,
+         value: error?.errors[0]?.value,
+         code: error?.parent?.errno || 1048,
+      }
+      throw customError;
    }
 }
 
@@ -123,10 +165,20 @@ const Update = async (newWord) => {
  * @returns {void}
  */
 const Delete = async (id) => {
+   const transaction = await sequelize.transaction();
    try {
       await Word.destroy({ where: { id_word: id } })
+      await transaction.commit();
    } catch (error) {
-      throw new Error(error.message);
+      await transaction.rollback();
+      const customError = {
+         message: error?.errors[0]?.message,
+         type: error?.errors[0]?.type,
+         path: error?.errors[0]?.path,
+         value: error?.errors[0]?.value,
+         code: error?.parent?.errno || 1048,
+      }
+      throw customError;
    }
 }
 

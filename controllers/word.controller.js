@@ -1,4 +1,5 @@
 const { request, response } = require('express');
+const errorsSequelize = require('../helpers/handleErrorsSequelize');
 const { printToJson } = require('../helpers/printJson');
 const WordModel = require('../models/Word');
 
@@ -10,8 +11,7 @@ const getWords = async (req = request, res = response) => {
       else
          return res.status(200).json(printToJson(200, "words no found", []));
    } catch (error) {
-      console.error(error)
-      return res.status(500).json(printToJson(500, error.message));
+      return errorsSequelize(res, error);
    }
 }
 
@@ -25,8 +25,7 @@ const getWordById = async (req = request, res = response) => {
          return res.status(404).json(printToJson(404, "word no found"));
       }
    } catch (error) {
-      console.error(error)
-      return res.status(500).json(printToJson(500, error.message));
+      return errorsSequelize(res, error);
    }
 }
 
@@ -34,9 +33,9 @@ const insertWord = async (req = request, res = response) => {
    try {
       const { id_category, description, icon } = req.body;
       const word = await WordModel.Insert({ id_category, description, icon });
-      return res.status(200).json(printToJson(200, "success", word));
+      return res.status(201).json(printToJson(201, "success", word));
    } catch (error) {
-      return res.status(500).json(printToJson(500, error.message));
+      return errorsSequelize(res, error);
    }
 }
 
@@ -46,19 +45,21 @@ const updateWord = async (req = request, res = response) => {
       const category = await WordModel.Update({ id_word, id_category, description, icon });
       return res.status(200).json(printToJson(200, "success", category));
    } catch (error) {
-      console.log(error.message)
-      res.status(500).json(printToJson(500, error.message));
+      return errorsSequelize(res, error);
    }
 }
 
 const deleteWord = async (req = request, res = response) => {
    try {
       const { id } = req.params;
-      await WordModel.Delete(id);
-      return res.status(204).json(printToJson(200, "success"));
+      const word = await WordModel.ShowById(id);
+      if (word) {
+         await WordModel.Delete(id);
+         return res.status(204).json(printToJson(204, "success"));
+      }
+      return res.status(404).json(printToJson(404, "Word no found with id " + id));
    } catch (error) {
-      console.error(error)
-      return res.status(500).json(printToJson(500, error.message));
+      return errorsSequelize(res, error);
    }
 }
 

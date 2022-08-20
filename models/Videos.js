@@ -32,11 +32,21 @@ const Videos = sequelize.define('VIDEOS', {
  * @returns {Array<IVideo>}
  */
 const Show = async () => {
+   const transaction = await sequelize.transaction();
    try {
       const query = await Videos.findAll();
+      await transaction.commit();
       return query;
    } catch (error) {
-      throw new Error(error.message);
+      await transaction.rollback();
+      const customError = {
+         message: error?.errors[0]?.message,
+         type: error?.errors[0]?.type,
+         path: error?.errors[0]?.path,
+         value: error?.errors[0]?.value,
+         code: error?.parent?.errno || 1048,
+      }
+      throw customError;
    }
 }
 
@@ -46,14 +56,24 @@ const Show = async () => {
  * @returns {IVideo | undefined} 
  */
 const ShowById = async (id) => {
+   const transaction = await sequelize.transaction();
    try {
       const query = await Videos.findByPk(id);
+      await transaction.commit();
       if (query) {
          return query.dataValues;
       }
       return undefined;
    } catch (error) {
-      throw new Error(error.message);
+      await transaction.rollback();
+      const customError = {
+         message: error?.errors[0]?.message,
+         type: error?.errors[0]?.type,
+         path: error?.errors[0]?.path,
+         value: error?.errors[0]?.value,
+         code: error?.parent?.errno || 1048,
+      }
+      throw customError;
    }
 }
 
@@ -63,10 +83,21 @@ const ShowById = async (id) => {
  * @returns {IVideo}
  */
 const Insert = async (newVideo) => {
+   const transaction = await sequelize.transaction();
    try {
-      return insertedVideo = await Videos.create(newVideo);
+      const insertedVideo = await Videos.create(newVideo);
+      await transaction.commit();
+      return insertedVideo;
    } catch (error) {
-      throw new Error(error.message);
+      await transaction.rollback();
+      const customError = {
+         message: error?.errors[0]?.message,
+         type: error?.errors[0]?.type,
+         path: error?.errors[0]?.path,
+         value: error?.errors[0]?.value,
+         code: error?.parent?.errno || 1048,
+      }
+      throw customError;
    }
 }
 
@@ -76,14 +107,24 @@ const Insert = async (newVideo) => {
  * @returns {IVideo}
  */
 const Update = async (newVideo) => {
+   const transaction = await sequelize.transaction();
    try {
       const video = await Videos.findByPk(newVideo.id_video);
       video.description = newVideo.description;
       video.link = newVideo.link;
       await video.save();
+      await transaction.commit();
       return video;
    } catch (error) {
-      throw new Error(error.message);
+      await transaction.rollback();
+      const customError = {
+         message: error?.errors[0]?.message,
+         type: error?.errors[0]?.type,
+         path: error?.errors[0]?.path,
+         value: error?.errors[0]?.value,
+         code: error?.parent?.errno || 1048,
+      }
+      throw customError;
    }
 }
 
@@ -93,10 +134,20 @@ const Update = async (newVideo) => {
  * @returns {void}
  */
 const Delete = async (id) => {
+   const transaction = await sequelize.transaction();
    try {
       await Videos.destroy({ where: { id_video: id } })
+      await transaction.commit();
    } catch (error) {
-      throw new Error(error.message);
+      await transaction.rollback();
+      const customError = {
+         message: error?.errors[0]?.message,
+         type: error?.errors[0]?.type,
+         path: error?.errors[0]?.path,
+         value: error?.errors[0]?.value,
+         code: error?.parent?.errno || 1048,
+      }
+      throw customError;
    }
 }
 

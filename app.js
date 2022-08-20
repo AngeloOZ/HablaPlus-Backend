@@ -28,7 +28,9 @@ app.get('/api', (req, res) => {
 
 app.use('/api/video', require("./routes/videos.routes"));
 app.use('/api/category', require("./routes/category.routes"));
-// app.use('/api/word', require("./routes/word.routes"));
+app.use('/api/word', require("./routes/word.routes"));
+app.use('/api/user', require("./routes/user.routes"));
+app.use('/api/auth', require("./routes/auth.routes"));
 
 /* -------------------------------------------------------------------------- */
 /*                        Manejo de errores y servidor                        */
@@ -38,7 +40,7 @@ app.use(function (req, res, next) {
 });
 app.listen(port, async () => {
    try {
-      // await sequelize.sync({ force: false });
+      // await sequelize.sync({ force: true });
       console.log(`Application is listening at port ${port}`);
    } catch { }
 });

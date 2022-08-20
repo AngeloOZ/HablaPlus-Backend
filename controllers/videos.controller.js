@@ -52,8 +52,12 @@ const updateVideo = async (req = request, res = response) => {
 const deleteVideo = async (req = request, res = response) => {
    try {
       const { id } = req.params;
-      await Videos.Delete(id);
-      return res.status(204).json(printToJson(200, "success"));
+      const video = await Videos.findByPk();
+      if(video){
+         await Videos.Delete(id);
+         return res.status(204).json(printToJson(200, "success"));
+      }
+      return res.status(404).json(printToJson(404, "Video no found with id " + id));
    } catch (error) {
       console.error(error)
       return res.status(500).json(printToJson(500, error.message));

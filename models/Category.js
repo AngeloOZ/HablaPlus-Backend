@@ -48,8 +48,10 @@ Word.belongsTo(Category, {
  * @returns {Array<ICategory>}
  */
 const Show = async () => {
+   const transaction = await sequelize.transaction();
    try {
       const query = await Category.findAll();
+      await transaction.commit();
       return query;
    } catch (error) {
       throw new Error(error.message);
@@ -62,14 +64,24 @@ const Show = async () => {
  * @returns {ICategory | undefined} Regresa una categoria o undefined si no existe
  */
 const ShowById = async (id) => {
+   const transaction = await sequelize.transaction();
    try {
       const query = await Category.findByPk(id);
+      await transaction.commit();
       if (query) {
          return query.dataValues;
       }
       return undefined;
    } catch (error) {
-      throw new Error(error);
+      await transaction.rollback();
+      const customError = {
+         message: error?.errors[0]?.message,
+         type: error?.errors[0]?.type,
+         path: error?.errors[0]?.path,
+         value: error?.errors[0]?.value,
+         code: error?.parent?.errno || 1048,
+      }
+      throw customError;
    }
 }
 
@@ -80,10 +92,21 @@ const ShowById = async (id) => {
  */
 
 const Insert = async (newCategory) => {
+   const transaction = await sequelize.transaction();
    try {
-      return insertedCategory = await Category.create(newCategory);
+      const insertedCategory = await Category.create(newCategory);
+      await transaction.commit();
+      return insertedCategory;
    } catch (error) {
-      throw new Error(error);
+      await transaction.rollback();
+      const customError = {
+         message: error?.errors[0]?.message,
+         type: error?.errors[0]?.type,
+         path: error?.errors[0]?.path,
+         value: error?.errors[0]?.value,
+         code: error?.parent?.errno || 1048,
+      }
+      throw customError;
    }
 }
 
@@ -93,15 +116,24 @@ const Insert = async (newCategory) => {
  * @returns {ICategory}
  */
 const Update = async (newCategory) => {
+   const transaction = await sequelize.transaction();
    try {
       const category = await Category.findByPk(newCategory.id_category);
       category.description = newCategory.description;
       category.icon = newCategory.icon;
       await category.save();
+      await transaction.commit();
       return category;
    } catch (error) {
-      console.table(error);
-      throw new Error(error);
+      await transaction.rollback();
+      const customError = {
+         message: error?.errors[0]?.message,
+         type: error?.errors[0]?.type,
+         path: error?.errors[0]?.path,
+         value: error?.errors[0]?.value,
+         code: error?.parent?.errno || 1048,
+      }
+      throw customError;
    }
 }
 
@@ -111,10 +143,20 @@ const Update = async (newCategory) => {
  * @returns {void}
  */
 const Delete = async (id) => {
+   const transaction = await sequelize.transaction();
    try {
       await Category.destroy({ where: { id_category: id } })
+      await transaction.commit();
    } catch (error) {
-      throw new Error(error);
+      await transaction.rollback();
+      const customError = {
+         message: error?.errors[0]?.message,
+         type: error?.errors[0]?.type,
+         path: error?.errors[0]?.path,
+         value: error?.errors[0]?.value,
+         code: error?.parent?.errno || 1048,
+      }
+      throw customError;
    }
 }
 

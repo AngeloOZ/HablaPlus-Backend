@@ -34,9 +34,9 @@ const getCategoryById = async (req = request, res = response) => {
 const getWordByCategory = async (req = request, res = response) => {
    try {
       const { id } = req.params;
-      const categories = await ShowByCategory(id);
-      if (categories.length != 0) {
-         return res.status(200).json(printToJson(200, "success", category));
+      const words = await ShowByCategory(id);
+      if (words.length != 0) {
+         return res.status(200).json(printToJson(200, "success", words));
       } else {
          return res.status(404).json(printToJson(200, "there aren't words in the category", []));
       }
@@ -70,8 +70,12 @@ const updateCategory = async (req = request, res = response) => {
 const deleteCategory = async (req = request, res = response) => {
    try {
       const { id } = req.params;
-      await CategoryModel.Delete(id);
-      return res.status(204).json(printToJson(200, "success"));
+      const category = await CategoryModel.ShowById(id);
+      if(category){
+         await CategoryModel.Delete(id);
+         return res.status(204).json(printToJson(200, "success"));
+      }
+      return res.status(404).json(printToJson(404, "Category no found with id " + id));
    } catch (error) {
       console.error(error)
       return res.status(500).json(printToJson(500, error.message));
