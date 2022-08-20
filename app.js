@@ -34,12 +34,13 @@ app.use('/api/user', require("./routes/user.routes"));
 app.use('/api/auth', require("./routes/auth.routes"));
 app.use('/api/rol', require("./routes/typeUser.routes"));
 app.use('/api/word_learned', require("./routes/wordLearned.routes"));
+app.use('/api/file', require("./routes/file.routes"));
 
 /* -------------------------------------------------------------------------- */
 /*                        Manejo de errores y servidor                        */
 /* -------------------------------------------------------------------------- */
 app.use(function (req, res, next) {
-   res.status(404).json(printToJson(404,`the url ${req.url} no found`))
+   res.status(404).json(printToJson(404, `the url ${req.url} no found`))
 });
 app.listen(port, async () => {
    try {
