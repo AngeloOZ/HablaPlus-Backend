@@ -10,7 +10,7 @@ const router = Router();
 router.get('/', validateToken, getVideos)
 router.get('/cliente', getVideos)
 router.get('/:id', validateToken, validateIdVideo, getVideoById);
-router.post('/', validateToken, checkRols([1, 2]), validateInsertVideo, insertVideo);
+router.post('/', validateToken, checkRols([1]), validateInsertVideo, insertVideo);
 router.put('/', validateToken, validateInsertVideo, updateVideo);
 router.delete('/:id', validateToken, validateIdVideo, deleteVideo);
 

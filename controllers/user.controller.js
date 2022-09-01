@@ -1,20 +1,9 @@
 const { request, response } = require('express');
 const { passwordHash } = require('../helpers/Bcrypt');
 const errorsSequelize = require('../helpers/handleErrorsSequelize');
-const { singToken } = require('../helpers/jwt');
 const { printToJson } = require('../helpers/printJson');
 const UserModel = require('../models/User');
 
-/**
-* @typedef {Object} IUser
-* @property {Number} [id_user] El Id del usuario
-* @property {String} names Los nombres del usuario
-* @property {String} surname Los apellidos de los usuarios
-* @property {Number} age La edad del usuario
-* @property {String} username El nombre de pila de usuario, 
-* @property {String} password La contrasenia del usuario
-* @property {Number} id_type El id del tipo o rol del usuario
-*/
 
 const getUsers = async (req = request, res = response) => {
    try {

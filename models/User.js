@@ -42,6 +42,7 @@ const User = sequelize.define('USER', {
    timestamps: false,
 });
 
+//TODO: Borrar relacion, no hay Score
 User.hasMany(Score, {
    foreignKey: {
       name: 'id_user',
@@ -175,6 +176,7 @@ const Insert = async (newUser) => {
 const Update = async (newUser) => {
    const transaction = await sequelize.transaction();
    try {
+      // User.update()
       const user = await User.findByPk(newUser.id_user);
       user.names = newUser.names;
       user.surname = newUser.surname;

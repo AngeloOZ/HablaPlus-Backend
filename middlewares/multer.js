@@ -20,7 +20,7 @@ const uploadFiles = (tipo) => {
       const upload = multer({
          storage,
          limits: { fileSize: 10200000 }
-      }).single('gatito');
+      }).single('file');
 
       return upload;
    } catch (error) {
