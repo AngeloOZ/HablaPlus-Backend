@@ -38,7 +38,7 @@ const getWordByCategory = async (req = request, res = response) => {
       if (words.length != 0) {
          return res.status(200).json(printToJson(200, "success", words));
       } else {
-         return res.status(404).json(printToJson(200, "there aren't words in the category", []));
+         return res.status(200).json(printToJson(200, "there aren't words in the category", []));
       }
    } catch (error) {
       console.error(error)
