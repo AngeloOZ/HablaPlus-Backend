@@ -1,4 +1,5 @@
 const { request, response } = require('express');
+const { deleteFiles } = require('../helpers/deleteFiles');
 const { printToJson } = require('../helpers/printJson');
 const CategoryModel = require('../models/Category');
 const { ShowByCategory } = require('../models/Word');
@@ -35,7 +36,7 @@ const getWordByCategory = async (req = request, res = response) => {
    try {
       const { id } = req.params;
       const words = await ShowByCategory(id);
-      if (words.length != 0) {
+      if (words?.length != 0) {
          return res.status(200).json(printToJson(200, "success", words));
       } else {
          return res.status(200).json(printToJson(200, "there aren't words in the category", []));
@@ -72,6 +73,7 @@ const deleteCategory = async (req = request, res = response) => {
       const { id } = req.params;
       const category = await CategoryModel.ShowById(id);
       if(category){
+         deleteFiles(category.icon);
          await CategoryModel.Delete(id);
          return res.status(204).json(printToJson(200, "success"));
       }

@@ -1,4 +1,5 @@
 const { DataTypes } = require('sequelize');
+const writeLogger = require('../helpers/handleErrorsLog');
 const { sequelize } = require('./database');
 const { Word_learned } = require('./Word_learned');
 
@@ -14,6 +15,10 @@ const Word = sequelize.define('WORD', {
       unique: true,
    },
    icon: {
+      type: DataTypes.STRING,
+      allowNull: false
+   },
+   audio:{
       type: DataTypes.STRING,
       allowNull: false
    }
@@ -40,6 +45,7 @@ Word_learned.belongsTo(Word, {
 * @property {Number} [id_word] El Id de la palabra
 * @property {String} description El nombre de la palabra
 * @property {String} icon Url de la imagen de la palabra
+* @property {String} audio Url del audio de la palabra
 * @property {Number} id_category El id de la categoria
 */
 
@@ -51,8 +57,10 @@ const Show = async () => {
    const transaction = await sequelize.transaction();
    try {
       const query = await Word.findAll();
+      await transaction.commit();
       return query;
    } catch (error) {
+      await transaction.rollback();
       throw new Error(error);
    }
 }
@@ -97,14 +105,14 @@ const ShowByCategory = async (category) => {
       return query;
    } catch (error) {
       await transaction.rollback();
-      const customError = {
-         message: error?.errors[0]?.message,
-         type: error?.errors[0]?.type,
-         path: error?.errors[0]?.path,
-         value: error?.errors[0]?.value,
-         code: error?.parent?.errno || 1048,
-      }
-      throw customError;
+      // const customError = {
+      //    message: error?.errors[0]?.message,
+      //    type: error?.errors[0]?.type,
+      //    path: error?.errors[0]?.path,
+      //    value: error?.errors[0]?.value,
+      //    code: error?.parent?.errno || 1048,
+      // }
+      throw error;
    }
 }
 
@@ -143,6 +151,8 @@ const Update = async (newWord) => {
       const word = await Word.findByPk(newWord.id_word);
       word.description = newWord.description;
       word.icon = newWord.icon;
+      word.id_category = newWord.id_category;
+      word.audio = newWord.audio;
       await word.save();
       await transaction.commit();
       return word;

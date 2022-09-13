@@ -28,6 +28,16 @@ const validateInsertWord = [
       .not().isURL()
       .withMessage("icon must not be an url")
       .trim(),
+   check('audio')
+      .exists()
+      .withMessage("audio is required")
+      .bail()
+      .notEmpty()
+      .withMessage("audio must not be empty")
+      .bail()
+      .not().isURL()
+      .withMessage("audio must not be an url")
+      .trim(),
    (req, res, next) => validateResult(req, res, next)
 ];
 
@@ -54,6 +64,15 @@ const validateUpdateWord = [
       .withMessage("icon must not be empty")
       .not().isURL()
       .withMessage("icon must not be an url")
+      .trim(),
+   check('audio')
+      .exists()
+      .withMessage("audio is required")
+      .bail()
+      .notEmpty()
+      .withMessage("audio must not be empty")
+      .not().isURL()
+      .withMessage("audio must not be an url")
       .trim(),
    check('id_category')
       .exists()

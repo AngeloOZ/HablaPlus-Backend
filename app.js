@@ -3,18 +3,21 @@ const path = require('path');
 const cors = require('cors')
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const fs = require('fs');
 require("dotenv").config();
 
 const { printToJson } = require('./helpers/printJson');
-// const { sequelize } = require('./models/database');
+const { sequelize } = require('./models/database');
 const validateToken = require('./middlewares/verifyToken');
 
 const app = express();
 const port = process.env.PORT || 3000;
+var log_file = fs.createWriteStream(__dirname + '/node.log', { flags: 'a' });
 
 /* -------------------------------------------------------------------------- */
 /*                          Funciones de middlewares                          */
 /* -------------------------------------------------------------------------- */
+app.use(logger({ stream: log_file }));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -46,7 +49,10 @@ app.use(function (req, res, next) {
 });
 app.listen(port, async () => {
    try {
-      // await sequelize.sync({ force: true });
       console.log(`Application is listening at port ${port}`);
-   } catch { }
+      await sequelize.authenticate();
+      // await sequelize.sync({ alter: true });
+   } catch (err) {
+      console.error(err)
+   }
 });

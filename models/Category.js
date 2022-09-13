@@ -1,4 +1,5 @@
 const { DataTypes } = require('sequelize');
+const writeLogger = require('../helpers/handleErrorsLog');
 const { sequelize } = require('./database');
 const { Word } = require('./Word');
 
@@ -54,6 +55,7 @@ const Show = async () => {
       await transaction.commit();
       return query;
    } catch (error) {
+      writeLogger(error);
       throw new Error(error.message);
    }
 }
@@ -73,6 +75,7 @@ const ShowById = async (id) => {
       }
       return undefined;
    } catch (error) {
+      writeLogger(error);
       await transaction.rollback();
       const customError = {
          message: error?.errors[0]?.message,
@@ -98,6 +101,7 @@ const Insert = async (newCategory) => {
       await transaction.commit();
       return insertedCategory;
    } catch (error) {
+      writeLogger(error);
       await transaction.rollback();
       const customError = {
          message: error?.errors[0]?.message,
@@ -125,6 +129,7 @@ const Update = async (newCategory) => {
       await transaction.commit();
       return category;
    } catch (error) {
+      writeLogger(error);
       await transaction.rollback();
       const customError = {
          message: error?.errors[0]?.message,
@@ -148,6 +153,7 @@ const Delete = async (id) => {
       await Category.destroy({ where: { id_category: id } })
       await transaction.commit();
    } catch (error) {
+      writeLogger(error);
       await transaction.rollback();
       const customError = {
          message: error?.errors[0]?.message,
