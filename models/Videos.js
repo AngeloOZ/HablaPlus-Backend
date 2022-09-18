@@ -1,4 +1,4 @@
-const { DataTypes } = require('sequelize');
+const { DataTypes, Sequelize } = require('sequelize');
 const { sequelize } = require('./database');
 
 const Videos = sequelize.define('VIDEOS', {
@@ -6,6 +6,10 @@ const Videos = sequelize.define('VIDEOS', {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true
+   },
+   id_unique: {
+      type: DataTypes.STRING,
+      defaultValue: Sequelize.UUIDV4
    },
    description: {
       type: DataTypes.STRING(100),
@@ -22,6 +26,7 @@ const Videos = sequelize.define('VIDEOS', {
 /**
 * @typedef {Object} IVideo
 * @property {Number} [id_video] El Id del video
+* @property {String} id_unique El Id del video unico uuid
 * @property {String} description La descripcion del video
 * @property {String} link El iframe del video de YouTube
 */
@@ -59,6 +64,33 @@ const ShowById = async (id) => {
    const transaction = await sequelize.transaction();
    try {
       const query = await Videos.findByPk(id);
+      await transaction.commit();
+      if (query) {
+         return query.dataValues;
+      }
+      return undefined;
+   } catch (error) {
+      await transaction.rollback();
+      const customError = {
+         message: error?.errors[0]?.message,
+         type: error?.errors[0]?.type,
+         path: error?.errors[0]?.path,
+         value: error?.errors[0]?.value,
+         code: error?.parent?.errno || 1048,
+      }
+      throw customError;
+   }
+}
+
+/**
+ * Funcion para recuperar un video de la base por el id
+ * @param {Number} id El id del video a buscar
+ * @returns {IVideo | undefined} 
+ */
+const ShowByIdUnique = async (id) => {
+   const transaction = await sequelize.transaction();
+   try {
+      const query = await Videos.findOne({ where: { id_unique: id } });
       await transaction.commit();
       if (query) {
          return query.dataValues;
@@ -151,4 +183,4 @@ const Delete = async (id) => {
    }
 }
 
-module.exports = { Videos, Show, ShowById, Insert, Update, Delete };
+module.exports = { Videos, Show, ShowById, ShowByIdUnique, Insert, Update, Delete };

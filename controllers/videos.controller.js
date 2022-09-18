@@ -27,10 +27,26 @@ const getVideoById = async (req = request, res = response) => {
    }
 }
 
+const getVideoByUnique = async (req = request, res = response) => {
+   try {
+      const { id } = req.params;
+      const video = await Videos.ShowByIdUnique(id);
+      if (video) {
+         return res.status(200).json(printToJson(200, "success", video));
+      } else {
+         return res.status(404).json(printToJson(404, "video no found"));
+      }
+   } catch (error) {
+      console.error(error)
+      return res.status(500).json(printToJson(500, error.message));
+   }
+}
+
 const insertVideo = async (req = request, res = response) => {
    try {
       const { description, link } = req.body;
-      const video = await Videos.Insert({ description, link });
+      const iFrameVideo = link.replace('width="560"', "").replace('height="315"', "");
+      const video = await Videos.Insert({ description, link: iFrameVideo });
       return res.status(200).json(printToJson(200, "success", video));
    } catch (error) {
       console.log(error.message)
@@ -41,7 +57,8 @@ const insertVideo = async (req = request, res = response) => {
 const updateVideo = async (req = request, res = response) => {
    try {
       const { description, link, id_video } = req.body;
-      const video = await Videos.Update({ id_video, description, link });
+      const iFrameVideo = link.replace('width="560"', "").replace('height="315"', "");
+      const video = await Videos.Update({ id_video, description, link: iFrameVideo });
       return res.status(200).json(printToJson(200, "success", video));
    } catch (error) {
       console.log(error.message)
@@ -52,10 +69,10 @@ const updateVideo = async (req = request, res = response) => {
 const deleteVideo = async (req = request, res = response) => {
    try {
       const { id } = req.params;
-      const video = await Videos.findByPk();
-      if(video){
+      const video = await Videos.ShowById(id);
+      if (video) {
          await Videos.Delete(id);
-         return res.status(204).json(printToJson(200, "success"));
+         return res.status(204).json(printToJson(204, "success"));
       }
       return res.status(404).json(printToJson(404, "Video no found with id " + id));
    } catch (error) {
@@ -65,4 +82,4 @@ const deleteVideo = async (req = request, res = response) => {
 }
 
 
-module.exports = { getVideos, getVideoById, insertVideo, updateVideo, deleteVideo };
+module.exports = { getVideos, getVideoById, getVideoByUnique, insertVideo, updateVideo, deleteVideo };

@@ -7,14 +7,13 @@ const validateInsertVideo = [
       .withMessage("description is required")
       .bail()
       .notEmpty()
-      .toLowerCase().trim(),
+      .trim(),
    check('link')
       .exists()
       .withMessage("link is required")
       .bail()
       .notEmpty()
-      .withMessage("link must not be empty")
-      .toLowerCase().trim(),
+      .withMessage("link must not be empty"),
    (req, res, next) => validateResult(req, res, next)
 ];
 
@@ -28,4 +27,14 @@ const validateIdVideo = [
    (req, res, next) => validateResult(req, res, next)
 ];
 
-module.exports = { validateInsertVideo, validateIdVideo }
+const validateIdUniqueVideo = [
+   check('id')
+      .exists()
+      .withMessage('id video is required')
+      .bail()
+      .notEmpty()
+      .withMessage('id must be not empty'),
+   (req, res, next) => validateResult(req, res, next)
+];
+
+module.exports = { validateInsertVideo, validateIdVideo, validateIdUniqueVideo }
