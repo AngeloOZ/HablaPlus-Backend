@@ -96,4 +96,14 @@ const validateIdWord = [
    (req, res, next) => validateResult(req, res, next)
 ];
 
-module.exports = { validateInsertWord, validateUpdateWord, validateIdWord }
+const validateIdUnique = [
+   check('id')
+      .exists()
+      .withMessage('id word is required')
+      .bail()
+      .notEmpty()
+      .withMessage('id must be not empty'),
+   (req, res, next) => validateResult(req, res, next)
+];
+
+module.exports = { validateInsertWord, validateUpdateWord, validateIdWord, validateIdUnique }

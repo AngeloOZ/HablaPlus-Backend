@@ -35,7 +35,14 @@ const getCategoryById = async (req = request, res = response) => {
 const getWordByCategory = async (req = request, res = response) => {
    try {
       const { id } = req.params;
-      const words = await ShowByCategory(id);
+      const { limit } = req.query;
+      let words;
+      if (limit) {
+         words = await ShowByCategory(id, Number.parseInt(limit));
+      } else {
+         words = await ShowByCategory(id, undefined);
+      }
+
       if (words?.length != 0) {
          return res.status(200).json(printToJson(200, "success", words));
       } else {
@@ -72,7 +79,7 @@ const deleteCategory = async (req = request, res = response) => {
    try {
       const { id } = req.params;
       const category = await CategoryModel.ShowById(id);
-      if(category){
+      if (category) {
          deleteFiles(category.icon);
          await CategoryModel.Delete(id);
          return res.status(204).json(printToJson(200, "success"));

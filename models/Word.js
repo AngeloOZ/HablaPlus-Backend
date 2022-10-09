@@ -1,5 +1,4 @@
-const { DataTypes } = require('sequelize');
-const writeLogger = require('../helpers/handleErrorsLog');
+const { DataTypes, Sequelize } = require('sequelize');
 const { sequelize } = require('./database');
 const { Word_learned } = require('./Word_learned');
 
@@ -18,10 +17,14 @@ const Word = sequelize.define('WORD', {
       type: DataTypes.STRING,
       allowNull: false
    },
-   audio:{
+   audio: {
       type: DataTypes.STRING,
       allowNull: false
-   }
+   },
+   id_unique: {
+      type: DataTypes.STRING,
+      defaultValue: Sequelize.UUIDV4
+   },
 }, {
    timestamps: false,
 });
@@ -47,6 +50,8 @@ Word_learned.belongsTo(Word, {
 * @property {String} icon Url de la imagen de la palabra
 * @property {String} audio Url del audio de la palabra
 * @property {Number} id_category El id de la categoria
+* @property {String} id_unique El Id de la unico uuid
+
 */
 
 /**
@@ -94,24 +99,50 @@ const ShowById = async (id) => {
 
 /**
  * Funcion para recuperar una palabra de la base por el id
+ * @param {Number} id El id de la palabra a buscar
+ * @returns {IWord | undefined} Regresa una palabra o undefined si no existe
+ */
+const ShowByIdUnique = async (id_unique) => {
+   const transaction = await sequelize.transaction();
+   try {
+      const query = await Word.findOne({ where: { id_unique } });
+      await transaction.commit();
+      if (query) {
+         return query.dataValues;
+      }
+      return undefined;
+   } catch (error) {
+      await transaction.rollback();
+      const customError = {
+         message: error?.errors[0]?.message,
+         type: error?.errors[0]?.type,
+         path: error?.errors[0]?.path,
+         value: error?.errors[0]?.value,
+         code: error?.parent?.errno || 1048,
+      }
+      throw customError;
+   }
+}
+
+/**
+ * Funcion para recuperar una palabra de la base por el id
  * @param {Number} category El id de la categoria
+ * @param {Number|undefined} [limite=undefined] limite de resultados a obtener
  * @returns {Array<IWord>} 
  */
-const ShowByCategory = async (category) => {
+const ShowByCategory = async (category, limite = undefined) => {
    const transaction = await sequelize.transaction()
    try {
-      const query = await Word.findAll({ where: { id_category: category } });
+      let query;
+      if (limite) {
+         query = await Word.findAll({ where: { id_category: category }, limit: limite });
+      } else {
+         query = await Word.findAll({ where: { id_category: category } });
+      }
       await transaction.commit();
       return query;
    } catch (error) {
       await transaction.rollback();
-      // const customError = {
-      //    message: error?.errors[0]?.message,
-      //    type: error?.errors[0]?.type,
-      //    path: error?.errors[0]?.path,
-      //    value: error?.errors[0]?.value,
-      //    code: error?.parent?.errno || 1048,
-      // }
       throw error;
    }
 }
@@ -192,4 +223,4 @@ const Delete = async (id) => {
    }
 }
 
-module.exports = { Word, Show, ShowById, ShowByCategory, Insert, Update, Delete }
+module.exports = { Word, Show, ShowById, ShowByIdUnique, ShowByCategory, Insert, Update, Delete }
