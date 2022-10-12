@@ -9,6 +9,7 @@ require("dotenv").config();
 const { printToJson } = require('./helpers/printJson');
 const { sequelize } = require('./models/database');
 const validateToken = require('./middlewares/verifyToken');
+const { Type_user } = require('./models/Type_user');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -38,8 +39,9 @@ app.use('/api/word', require("./routes/word.routes"));
 app.use('/api/user', require("./routes/user.routes"));
 app.use('/api/auth', require("./routes/auth.routes"));
 app.use('/api/rol', require("./routes/typeUser.routes"));
-app.use('/api/word_learned', require("./routes/wordLearned.routes"));
 app.use('/api/file', require("./routes/file.routes"));
+app.use('/api/word_learned', require("./routes/wordLearned.routes"));
+app.use('/api/sentences', require("./routes/sentences.routes"));
 
 /* -------------------------------------------------------------------------- */
 /*                        Manejo de errores y servidor                        */
@@ -49,8 +51,8 @@ app.use(function (req, res, next) {
 });
 app.listen(port, async () => {
    try {
-      console.log(`Application is listening at port ${port}`);
       await sequelize.authenticate();
+      console.log(`Application is listening at port ${port}`);
       // await sequelize.sync({ alter: true });
    } catch (err) {
       console.error(err)

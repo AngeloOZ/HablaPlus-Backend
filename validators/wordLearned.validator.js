@@ -19,4 +19,12 @@ const validateInsertWordLearned = [
    (req, res, next) => validateResult(req, res, next)
 ];
 
-module.exports = { validateInsertWordLearned }
+const valideIdwordLearned = [
+   check('id')
+   .exists()
+   .notEmpty()
+   .not().isInt()
+   .toInt()
+];
+
+module.exports = { validateInsertWordLearned, valideIdwordLearned }

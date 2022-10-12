@@ -1,4 +1,4 @@
-const { DataTypes } = require('sequelize');
+const { DataTypes, Sequelize } = require('sequelize');
 const writeLogger = require('../helpers/handleErrorsLog');
 const { sequelize } = require('./database');
 const { Word } = require('./Word');
@@ -17,7 +17,11 @@ const Category = sequelize.define('CATEGORY', {
    icon: {
       type: DataTypes.STRING,
       allowNull: false
-   }
+   },
+   id_unique: {
+      type: DataTypes.STRING,
+      defaultValue: Sequelize.UUIDV4
+   },
 }, {
    timestamps: false,
 })

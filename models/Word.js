@@ -1,5 +1,6 @@
 const { DataTypes, Sequelize } = require('sequelize');
 const { sequelize } = require('./database');
+const { Sentence } = require('./Sentence');
 const { Word_learned } = require('./Word_learned');
 
 const Word = sequelize.define('WORD', {
@@ -40,6 +41,30 @@ Word.hasMany(Word_learned, {
 
 Word_learned.belongsTo(Word, {
    foreignKey: 'id_word',
+   sourceKey: 'id_word'
+})
+
+Word.hasMany(Sentence,{
+   foreignKey:{
+      name: 'pictograma_one',
+      type: DataTypes.INTEGER,
+   },
+   sourceKey: 'id_word'
+})
+Sentence.belongsTo(Word,{
+   foreignKey: 'pictograma_one',
+   sourceKey: 'id_word'
+})
+
+Word.hasMany(Sentence,{
+   foreignKey:{
+      name: 'pictograma_two',
+      type: DataTypes.INTEGER,
+   },
+   sourceKey: 'id_word'
+})
+Sentence.belongsTo(Word,{
+   foreignKey: 'pictograma_two',
    sourceKey: 'id_word'
 })
 

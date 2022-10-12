@@ -14,7 +14,8 @@ const Type_user = sequelize.define('TYPE_USER', {
    }
 }, {
    timestamps: false,
-})
+});
+
 Type_user.hasMany(User, {
    foreignKey: {
       name: 'id_type',

@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('./database');
 const { Score } = require('./Score');
+const { Type_user } = require('./Type_user');
 const { Word_learned } = require('./Word_learned');
 
 const User = sequelize.define('USER', {
@@ -30,31 +31,31 @@ const User = sequelize.define('USER', {
       type: DataTypes.STRING(100),
       allowNull: false
    },
-   id_type: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-         model: "type_users",
-         key: "id_type"
-      }
-   }
+   // id_type: {
+   //    type: DataTypes.INTEGER,
+   //    allowNull: false,
+   //    references: {
+   //       model: 'type_users',
+   //       key: "id_type"
+   //    }
+   // }
 }, {
    timestamps: false,
 });
 
 //TODO: Borrar relacion, no hay Score
-User.hasMany(Score, {
-   foreignKey: {
-      name: 'id_user',
-      type: DataTypes.INTEGER,
-      allowNull: false,
-   },
-   sourceKey: 'id_user'
-});
-Score.belongsTo(User, {
-   foreignKey: 'id_user',
-   sourceKey: 'id_user'
-});
+// User.hasMany(Score, {
+//    foreignKey: {
+//       name: 'id_user',
+//       type: DataTypes.INTEGER,
+//       allowNull: false,
+//    },
+//    sourceKey: 'id_user'
+// });
+// Score.belongsTo(User, {
+//    foreignKey: 'id_user',
+//    sourceKey: 'id_user'
+// });
 
 User.hasMany(Word_learned, {
    foreignKey: {
