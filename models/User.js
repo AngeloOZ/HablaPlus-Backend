@@ -1,7 +1,5 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('./database');
-const { Score } = require('./Score');
-const { Type_user } = require('./Type_user');
 const { Word_learned } = require('./Word_learned');
 
 const User = sequelize.define('USER', {
@@ -30,15 +28,7 @@ const User = sequelize.define('USER', {
    password: {
       type: DataTypes.STRING(100),
       allowNull: false
-   },
-   // id_type: {
-   //    type: DataTypes.INTEGER,
-   //    allowNull: false,
-   //    references: {
-   //       model: 'type_users',
-   //       key: "id_type"
-   //    }
-   // }
+   }
 }, {
    timestamps: false,
 });

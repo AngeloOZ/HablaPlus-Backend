@@ -42,10 +42,12 @@ async function renewSentenceUrl(sentence) {
       ...current,
       pictograma_one: {
          id_word: word1.id_word,
+         id_category: word1.id_category,
          url: word1.icon
       },
       pictograma_two: {
          id_word: word2.id_word,
+         id_category: word2.id_category,
          url: word2.icon
       }
    }

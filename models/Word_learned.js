@@ -1,7 +1,5 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('./database');
-// const { User } = require('./User');
-// const { Word } = require('./Word');
 
 const Word_learned = sequelize.define('WORD_LEARNED', {
    id_word_learned: {

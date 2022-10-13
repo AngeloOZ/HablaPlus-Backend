@@ -1,6 +1,5 @@
 const { DataTypes, Sequelize } = require('sequelize');
 const { sequelize } = require('./database');
-const { Word } = require('./Word');
 
 const Sentence = sequelize.define('SENTENCE', {
    id_sentence: {
