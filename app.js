@@ -13,13 +13,10 @@ const { Type_user } = require('./models/Type_user');
 
 const app = express();
 const port = process.env.PORT || 3000;
-var log_file = fs.createWriteStream(__dirname + '/node.log', { flags: 'a' });
 
 /* -------------------------------------------------------------------------- */
 /*                          Funciones de middlewares                          */
 /* -------------------------------------------------------------------------- */
-// app.use(logger({ stream: log_file }));
-// app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -53,7 +50,7 @@ app.listen(port, async () => {
    try {
       await sequelize.authenticate();
       console.log(`Application is listening at port ${port}`);
-      // await sequelize.sync({ alter: true });
+      await sequelize.sync({ alter: true });
    } catch (err) {
       console.error(err)
    }
