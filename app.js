@@ -12,7 +12,7 @@ const validateToken = require('./middlewares/verifyToken');
 const { Type_user } = require('./models/Type_user');
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4010;
 
 /* -------------------------------------------------------------------------- */
 /*                          Funciones de middlewares                          */
