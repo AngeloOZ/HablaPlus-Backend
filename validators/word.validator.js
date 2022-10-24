@@ -25,7 +25,7 @@ const validateInsertWord = [
       .notEmpty()
       .withMessage("icon must not be empty")
       .bail()
-      .isURL()
+      // .isURL()
       .withMessage("icon must not be an url")
       .trim(),
    check('audio')
@@ -35,7 +35,7 @@ const validateInsertWord = [
       .notEmpty()
       .withMessage("audio must not be empty")
       .bail()
-      .isURL()
+      // .isURL()
       .withMessage("audio must not be an url")
       .trim(),
    (req, res, next) => validateResult(req, res, next)
@@ -62,7 +62,7 @@ const validateUpdateWord = [
       .bail()
       .notEmpty()
       .withMessage("icon must not be empty")
-      .isURL()
+      // .isURL()
       .withMessage("icon must not be an url")
       .trim(),
    check('audio')
@@ -71,7 +71,7 @@ const validateUpdateWord = [
       .bail()
       .notEmpty()
       .withMessage("audio must not be empty")
-      .isURL()
+      // .isURL()
       .withMessage("audio must not be an url")
       .trim(),
    check('id_category')

@@ -8,15 +8,14 @@ const { renewSentenceUrl } = require('./seentences.controller');
 async function getSentenceByIdWord(word) {
    const current = word.dataValues;
    const query = await Sentence.findOne({ where: { pictograma_one: current.id_word } });
-   let sentence = null;
+   let sentence = undefined;
    if (query?.dataValues) {
       sentence = await renewSentenceUrl(query);
+      sentence.pictograma_one = sentence.pictograma_one.url
+      sentence.pictograma_two = sentence.pictograma_two.url
+      delete sentence.word_name;
    }
-   const newWord = {
-      ...current,
-      sentence: sentence
-   }
-   return newWord;
+   return sentence;
 }
 
 const registerWordLearned = async (req = request, res = response) => {
@@ -40,9 +39,12 @@ const getWordsLearnedByUser = async (req = request, res = response) => {
       let resultWordsLearned = [];
 
       for (const word of wordsAll) {
-         resultWordsLearned = [...resultWordsLearned, await getSentenceByIdWord(word)];
+         const curr = await getSentenceByIdWord(word);
+         if(curr){
+            resultWordsLearned = [...resultWordsLearned, curr];
+         }
       }
-
+      
       res.status(200).json(printToJson(200, 'succes', resultWordsLearned));
    } catch (error) {
       return res.status(500).json(printToJson(500, error.message));
