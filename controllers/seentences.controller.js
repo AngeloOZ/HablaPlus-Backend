@@ -40,6 +40,7 @@ async function renewSentenceUrl(sentence) {
 
    const newSentence = {
       ...current,
+      word_name: word1.description.replaceAll("*",""),
       pictograma_one: {
          id_word: word1.id_word,
          id_category: word1.id_category,

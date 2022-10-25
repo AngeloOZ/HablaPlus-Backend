@@ -50,7 +50,7 @@ app.listen(port, async () => {
    try {
       await sequelize.authenticate();
       console.log(`Application is listening at port ${port}`);
-      await sequelize.sync({ alter: true });
+      // await sequelize.sync({ alter: true });
    } catch (err) {
       console.error(err)
    }
