@@ -14,8 +14,6 @@ const validateInsertCategory = [
       .bail()
       .notEmpty()
       .withMessage("icon must not be empty")
-      .isURL()
-      .withMessage("icon must not be an url")
       .trim(),
    (req, res, next) => validateResult(req, res, next)
 ];
@@ -41,8 +39,6 @@ const validateUpdateCategory = [
       .bail()
       .notEmpty()
       .withMessage("icon must not be empty")
-      .isURL()
-      .withMessage("icon must not be an url")
       .trim(),
    (req, res, next) => validateResult(req, res, next)
 ];
