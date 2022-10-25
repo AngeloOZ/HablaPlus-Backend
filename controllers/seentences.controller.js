@@ -44,12 +44,12 @@ async function renewSentenceUrl(sentence) {
       pictograma_one: {
          id_word: word1.id_word,
          id_category: word1.id_category,
-         url: word1.icon
+         url: `${process.env.URL_BASE}${word1.icon}`
       },
       pictograma_two: {
          id_word: word2.id_word,
          id_category: word2.id_category,
-         url: word2.icon
+         url: `${process.env.URL_BASE}${word2.icon}`
       }
    }
    return newSentence

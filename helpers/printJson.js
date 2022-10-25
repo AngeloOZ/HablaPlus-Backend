@@ -14,4 +14,8 @@ const printToJson = (status = 404, message = "No found", data = null) => {
    return res;
 }
 
-module.exports = { printToJson };
+const pathCategoryToUrlFile = (category) => {
+   return `${process.env.URL_BASE}${category.icon}`;
+}
+
+module.exports = { printToJson, pathCategoryToUrlFile };

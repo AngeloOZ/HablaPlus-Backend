@@ -7,8 +7,12 @@ const { ShowByCategory } = require('../models/Word');
 const getCategories = async (req = request, res = response) => {
    try {
       const categories = await CategoryModel.Show();
-      if (categories.length != 0)
+      if (categories.length != 0){
+         for (const category of categories) {
+            category.icon = `${process.env.URL_BASE}${category.icon}`;
+         }
          return res.status(200).json(printToJson(200, "success", categories));
+      }
       else
          return res.status(200).json(printToJson(200, "categories no found", []));
    } catch (error) {
@@ -22,6 +26,7 @@ const getCategoryById = async (req = request, res = response) => {
       const { id } = req.params;
       const category = await CategoryModel.ShowById(id);
       if (category) {
+         category.icon = `${process.env.URL_BASE}${category.icon}`;
          return res.status(200).json(printToJson(200, "success", category));
       } else {
          return res.status(404).json(printToJson(404, "category no found"));
@@ -44,6 +49,10 @@ const getWordByCategory = async (req = request, res = response) => {
       }
 
       if (words?.length != 0) {
+         for (const word of words) {
+            word.icon = `${process.env.URL_BASE}${word.icon}`;
+            word.audio = `${process.env.URL_BASE}${word.audio}`;
+         }
          return res.status(200).json(printToJson(200, "success", words));
       } else {
          return res.status(200).json(printToJson(200, "there aren't words in the category", []));

@@ -7,10 +7,15 @@ const { deleteFiles } = require('../helpers/deleteFiles');
 const getWords = async (req = request, res = response) => {
    try {
       const words = await WordModel.Show();
-      if (words.length != 0)
+      if (words.length != 0) {
+         for (const word of words) {
+            word.icon = `${process.env.URL_BASE}${word.icon}`;
+            word.audio = `${process.env.URL_BASE}${word.audio}`;
+         }
          return res.status(200).json(printToJson(200, "success", words));
-      else
+      } else {
          return res.status(200).json(printToJson(200, "words no found", []));
+      }
    } catch (error) {
       return errorsSequelize(res, error);
    }
@@ -22,6 +27,8 @@ const getWordById = async (req = request, res = response) => {
       const word = await WordModel.ShowById(id);
       if (word) {
          word.pronunciation = word.description.replace('*', '<span>').replace('*', '</span>');
+         word.icon = `${process.env.URL_BASE}${word.icon}`;
+         word.audio = `${process.env.URL_BASE}${word.audio}`;
          return res.status(200).json(printToJson(200, "success", word));
       } else {
          return res.status(404).json(printToJson(404, "word no found"));
@@ -38,7 +45,6 @@ const getWordByIdUnique = async (req = request, res = response) => {
       if (currentWord) {
          const words = await WordModel.ShowByCategory(currentWord.id_category);
          const wordsResult = {
-            previous: undefined,
             current: undefined,
             next: undefined,
          }
@@ -52,6 +58,13 @@ const getWordByIdUnique = async (req = request, res = response) => {
                break;
             }
          }
+
+         wordsResult.current.icon = `${process.env.URL_BASE}${wordsResult.current.icon}`;
+         wordsResult.current.audio = `${process.env.URL_BASE}${wordsResult.current.audio}`;
+
+         wordsResult.next.icon = `${process.env.URL_BASE}${wordsResult.next.icon}`;
+         wordsResult.next.audio = `${process.env.URL_BASE}${wordsResult.next.audio}`;
+
          return res.status(200).json(printToJson(200, "success", wordsResult));
       }
       return res.status(404).json(printToJson(404, `word no found with id: ${id}`));
