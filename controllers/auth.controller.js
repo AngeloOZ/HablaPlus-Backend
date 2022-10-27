@@ -1,6 +1,6 @@
 const { request, response } = require('express');
 const { passwordVerify, passwordHash } = require('../helpers/Bcrypt');
-const { singToken } = require('../helpers/jwt');
+const { singToken, verifyToken } = require('../helpers/jwt');
 const { printToJson } = require('../helpers/printJson');
 const UserModel = require('../models/User');
 
@@ -30,9 +30,9 @@ const authLogin = async (req = request, res = response) => {
                id_user: user.id_user,
                id_type: user.id_type
             }
-            const token = await singToken(payload);
+            const token = await singToken(payload, "1d");
             payload.token = token;
-            return res.status(200).json(printToJson(200, "success", payload));
+            return res.status(200).json(payload);
          }
          return res.status(404).json(printToJson(404, "The user or password are wrong"));
       }
@@ -65,10 +65,20 @@ const authRegister = async (req = request, res = response) => {
       }
       const token = await singToken(payload, "1d");
       payload.token = token;
-      return res.status(200).json(printToJson(200, "success", payload));
+      return res.status(200).json(payload);
    } catch (error) {
       return res.status(500).json(printToJson(500, "failed insertion", error));
    }
 }
 
-module.exports = { authLogin, authRegister }
+const verifyTokenController = async (req = request, res = response) => {
+   try {
+      const { token } = req.body;
+      const payload = verifyToken(token);
+      res.status(200).json(payload);
+   } catch (error) {
+      res.status(403).json(printToJson(403, "Invalid token", error))
+   }
+}
+
+module.exports = { authLogin, authRegister, verifyTokenController }
