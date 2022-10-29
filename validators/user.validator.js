@@ -9,9 +9,7 @@ const validateInsertUser = [
       .notEmpty()
       .withMessage("names must not be empty")
       .bail()
-      .not().isAlpha('es-ES')
-      .bail()
-      .toLowerCase().trim(),
+      .trim(),
    check('surname')
       .exists()
       .withMessage("surname is required")
@@ -19,8 +17,7 @@ const validateInsertUser = [
       .notEmpty()
       .withMessage("surname must not be empty")
       .bail()
-      .not().isAlpha('es-ES')
-      .toLowerCase().trim(),
+      .trim(),
    check('age')
       .exists()
       .withMessage('age is required')
@@ -39,7 +36,8 @@ const validateInsertUser = [
       .notEmpty()
       .withMessage('username must not be empty')
       .bail()
-      .isAlphanumeric(),
+      .isAlphanumeric()
+      .trim(),
    check('password')
       .exists()
       .withMessage('password is required')
@@ -79,7 +77,7 @@ const validateUpdateUser = [
       .notEmpty()
       .withMessage("names must not be empty")
       .bail()
-      .toLowerCase().trim(),
+      .trim(),
    check('surname')
       .exists()
       .withMessage("surname is required")
@@ -87,7 +85,7 @@ const validateUpdateUser = [
       .notEmpty()
       .withMessage("surname must not be empty")
       .bail()
-      .toLowerCase().trim(),
+      .trim(),
    check('age')
       .exists()
       .withMessage('age is required')
@@ -106,7 +104,8 @@ const validateUpdateUser = [
       .notEmpty()
       .withMessage('username must not be empty')
       .bail()
-      .isAlphanumeric(),
+      .isAlphanumeric()
+      .trim(),
    check('newPassword')
       .optional()
       .notEmpty()
@@ -130,7 +129,7 @@ const validateUpdateUser = [
 const validateIdUser = [
    check('id')
       .exists()
-      .withMessage('id category is required')
+      .withMessage('id user is required')
       .bail()
       .isInt()
       .withMessage("id must be integer")
