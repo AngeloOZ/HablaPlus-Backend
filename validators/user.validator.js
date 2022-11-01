@@ -145,9 +145,8 @@ const validateRegisterUser = [
       .notEmpty()
       .withMessage("names must not be empty")
       .bail()
-      .not().isAlpha('es-ES')
-      .bail()
-      .toLowerCase().trim(),
+      .not()
+      .trim(),
    check('surname')
       .exists()
       .withMessage("surname is required")
@@ -155,8 +154,7 @@ const validateRegisterUser = [
       .notEmpty()
       .withMessage("surname must not be empty")
       .bail()
-      .not().isAlpha('es-ES')
-      .toLowerCase().trim(),
+      .trim(),
    check('age')
       .exists()
       .withMessage('age is required')
