@@ -182,7 +182,6 @@ const Insert = async (newUser) => {
 const Update = async (newUser) => {
    const transaction = await sequelize.transaction();
    try {
-      // User.update()
       const user = await User.findByPk(newUser.id_user);
       user.names = newUser.names;
       user.surname = newUser.surname;

@@ -49,7 +49,6 @@ const getAvatarByUser = async (req = request, res = response) => {
       for (const avatar of avatarsAll) {
          const aux = avatarsUser.find(curr => curr?.id_avatar === avatar.id_avatar);
          if (!aux) continue;
-         console.log(aux)
          avatar.id_user_avatar = aux.id_user_avatar;
          avatar.reclaimed = true;
          avatar.selected = aux.selected;

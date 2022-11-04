@@ -1,9 +1,11 @@
 const { request, response } = require('express');
 const { passwordHash } = require('../helpers/Bcrypt');
 const errorsSequelize = require('../helpers/handleErrorsSequelize');
+const { singToken } = require('../helpers/jwt');
 const { printToJson } = require('../helpers/printJson');
 const UserModel = require('../models/User');
 const { insertAvatarCreatePatient } = require('./auth.controller');
+const { getCurrentAvatar } = require('./avatar.controller');
 
 
 const getUsers = async (req = request, res = response) => {
@@ -81,6 +83,42 @@ const updateUser = async (req = request, res = response) => {
    }
 }
 
+const updateUserClient = async (req = request, res = response) => {
+   try {
+      const { id_user, names, surname, age, username, newPassword } = req.body;
+      const newUser = {
+         id_user,
+         names,
+         surname,
+         age,
+         username,
+         password: undefined,
+         id_type: 2
+      }
+      if (newPassword) {
+         const password = await passwordHash(newPassword);
+         newUser.password = password;
+      }
+
+      const user = await UserModel.Update(newUser);
+      const currentAvatar = await getCurrentAvatar(user.id_user);
+      const payload = {
+         id_user: user.id_user,
+         names: user.names,
+         surname: user.surname,
+         username: user.username,
+         age: user.age,
+         id_type: user.id_type,
+         avatar: currentAvatar
+      }
+      const token = await singToken(payload, "1d");
+      payload.token = token;
+      return res.status(200).json(payload);
+   } catch (error) {
+      return res.status(500).json(printToJson(500, "failed insertion", error));
+   }
+}
+
 const deleteUser = async (req = request, res = response) => {
    try {
       const { id } = req.params;
@@ -96,4 +134,4 @@ const deleteUser = async (req = request, res = response) => {
    }
 }
 
-module.exports = { getUsers, getUserById, insertUser, updateUser, deleteUser }
+module.exports = { getUsers, getUserById, insertUser, updateUser, updateUserClient, deleteUser }

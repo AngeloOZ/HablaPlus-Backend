@@ -29,6 +29,7 @@ const authLogin = async (req = request, res = response) => {
                names: user.names,
                surname: user.surname,
                username: user.username,
+               age: user.age,
                id_user: user.id_user,
                id_type: user.id_type,
                avatar: currentAvatar
@@ -66,6 +67,7 @@ const authRegister = async (req = request, res = response) => {
          names: user.names,
          surname: user.surname,
          username: user.username,
+         age: user.age,
          id_user: user.id_user,
          id_type: user.id_type
       }

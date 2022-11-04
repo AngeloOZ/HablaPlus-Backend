@@ -126,6 +126,62 @@ const validateUpdateUser = [
    (req, res, next) => validateResult(req, res, next)
 ];
 
+const validateUpdateUserClient = [
+   check('id_user')
+      .exists()
+      .withMessage('id_user is required')
+      .bail()
+      .notEmpty()
+      .withMessage('id_user must not be empty')
+      .bail()
+      .isInt()
+      .toInt(),
+   check('names')
+      .exists()
+      .withMessage("names is required")
+      .bail()
+      .notEmpty()
+      .withMessage("names must not be empty")
+      .bail()
+      .trim(),
+   check('surname')
+      .exists()
+      .withMessage("surname is required")
+      .bail()
+      .notEmpty()
+      .withMessage("surname must not be empty")
+      .bail()
+      .trim(),
+   check('age')
+      .exists()
+      .withMessage('age is required')
+      .bail()
+      .notEmpty()
+      .withMessage('age must not be empty')
+      .bail()
+      .isInt()
+      .withMessage('age is not integer')
+      .bail()
+      .toInt(),
+   check('username')
+      .exists()
+      .withMessage('username is required')
+      .bail()
+      .notEmpty()
+      .withMessage('username must not be empty')
+      .bail()
+      .isAlphanumeric()
+      .trim(),
+   check('newPassword')
+      .optional()
+      .notEmpty()
+      .withMessage('password must not be empty')
+      .bail()
+      .isAlphanumeric()
+      .trim(),
+   (req, res, next) => validateResult(req, res, next)
+];
+
 const validateIdUser = [
    check('id')
       .exists()
@@ -207,4 +263,4 @@ const validateLogin = [
    (req, res, next) => validateResult(req, res, next)
 ];
 
-module.exports = { validateInsertUser, validateUpdateUser, validateIdUser, validateLogin, validateRegisterUser }
+module.exports = { validateInsertUser, validateUpdateUser, validateUpdateUserClient, validateIdUser, validateLogin, validateRegisterUser }
