@@ -24,7 +24,6 @@ const authLogin = async (req = request, res = response) => {
 
       if (user) {
          if (user.username == username && await passwordVerify(password, user.password)) {
-            const currentAvatar = await getCurrentAvatar(user.id_user);
             const payload = {
                names: user.names,
                surname: user.surname,
@@ -32,7 +31,10 @@ const authLogin = async (req = request, res = response) => {
                age: user.age,
                id_user: user.id_user,
                id_type: user.id_type,
-               avatar: currentAvatar
+            }
+            if(user.id_type == 2){
+               const currentAvatar = await getCurrentAvatar(user.id_user);
+               payload.avatar = currentAvatar;
             }
             const token = await singToken(payload, "1d");
             payload.token = token;
