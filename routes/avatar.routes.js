@@ -6,7 +6,7 @@ const router = Router();
 
 
 router.get('/', getAllAvatars);
-router.get('/user/:id', getAvatarByUser);
+router.get('/user',validateToken, checkRols([2]), getAvatarByUser);
 router.post('/', validateToken, checkRols([2]), registerAvatar);
 router.put('/', validateToken, checkRols([2]), updateAvatar);
 
