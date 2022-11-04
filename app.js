@@ -2,14 +2,15 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors')
 const cookieParser = require('cookie-parser');
-// const logger = require('morgan');
+
 const fs = require('fs');
 require("dotenv").config();
 
 const { printToJson } = require('./helpers/printJson');
 const { sequelize } = require('./models/database');
 const validateToken = require('./middlewares/verifyToken');
-const { Type_user } = require('./models/Type_user');
+const { Avatar } = require('./models/Avatar');
+
 
 const app = express();
 const port = process.env.PORT || 4010;
@@ -39,6 +40,7 @@ app.use('/api/rol', require("./routes/typeUser.routes"));
 app.use('/api/file', require("./routes/file.routes"));
 app.use('/api/word_learned', require("./routes/wordLearned.routes"));
 app.use('/api/sentences', require("./routes/sentences.routes"));
+app.use('/api/avatar', require("./routes/avatar.routes"));
 
 /* -------------------------------------------------------------------------- */
 /*                        Manejo de errores y servidor                        */

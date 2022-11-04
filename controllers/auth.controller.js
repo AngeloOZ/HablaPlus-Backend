@@ -3,6 +3,8 @@ const { passwordVerify, passwordHash } = require('../helpers/Bcrypt');
 const { singToken, verifyToken } = require('../helpers/jwt');
 const { printToJson } = require('../helpers/printJson');
 const UserModel = require('../models/User');
+const { User_avatar } = require('../models/User_avatar');
+const { getCurrentAvatar } = require('./avatar.controller');
 
 /**
 * @typedef {Object} IUser
@@ -18,17 +20,18 @@ const UserModel = require('../models/User');
 const authLogin = async (req = request, res = response) => {
    try {
       const { username, password } = req.body;
-      console.log(username);
       const user = await UserModel.ShowByUsername(username);
 
       if (user) {
          if (user.username == username && await passwordVerify(password, user.password)) {
+            const currentAvatar = await getCurrentAvatar(user.id_user);
             const payload = {
                names: user.names,
                surname: user.surname,
                username: user.username,
                id_user: user.id_user,
-               id_type: user.id_type
+               id_type: user.id_type,
+               avatar: currentAvatar
             }
             const token = await singToken(payload, "1d");
             payload.token = token;
@@ -56,6 +59,9 @@ const authRegister = async (req = request, res = response) => {
          password,
          id_type: 2
       });
+
+      await insertAvatarCreatePatient(user.id_user);
+
       const payload = {
          names: user.names,
          surname: user.surname,
@@ -81,4 +87,22 @@ const verifyTokenController = async (req = request, res = response) => {
    }
 }
 
-module.exports = { authLogin, authRegister, verifyTokenController }
+async function insertAvatarCreatePatient(id_user) {
+   const initAvatars = [
+      {
+         id_avatar: 1,
+         id_user: id_user,
+         selected: true
+      },
+      {
+         id_avatar: 2,
+         id_user: id_user,
+         selected: false
+      }
+   ]
+   for (const avatar of initAvatars) {
+      await User_avatar.create(avatar)
+   }
+}
+
+module.exports = { authLogin, authRegister, verifyTokenController, insertAvatarCreatePatient }

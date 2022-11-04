@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('./database');
+const { User_avatar } = require('./User_avatar');
 const { Word_learned } = require('./Word_learned');
 
 const User = sequelize.define('USER', {
@@ -56,6 +57,20 @@ User.hasMany(Word_learned, {
    sourceKey: 'id_user'
 })
 Word_learned.belongsTo(User, {
+   foreignKey: 'id_user',
+   sourceKey: 'id_user'
+});
+
+User.hasMany(User_avatar, {
+   foreignKey: {
+      name: 'id_user',
+      type: DataTypes.INTEGER,
+      allowNull: false,
+   },
+   sourceKey: 'id_user'
+})
+
+User_avatar.belongsTo(User, {
    foreignKey: 'id_user',
    sourceKey: 'id_user'
 })

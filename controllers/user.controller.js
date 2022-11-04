@@ -3,6 +3,7 @@ const { passwordHash } = require('../helpers/Bcrypt');
 const errorsSequelize = require('../helpers/handleErrorsSequelize');
 const { printToJson } = require('../helpers/printJson');
 const UserModel = require('../models/User');
+const { insertAvatarCreatePatient } = require('./auth.controller');
 
 
 const getUsers = async (req = request, res = response) => {
@@ -45,8 +46,13 @@ const insertUser = async (req = request, res = response) => {
          id_type
       });
 
+      if (user.id_type == 2) {
+         await insertAvatarCreatePatient(user.id_user);
+      }
+
       return res.status(201).json(printToJson(201, "success", user));
    } catch (error) {
+      console.log(error)
       return res.status(500).json(printToJson(500, "failed insertion", error));
    }
 }

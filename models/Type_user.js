@@ -29,4 +29,14 @@ User.belongsTo(Type_user, {
    sourceKey: 'id_type'
 })
 
-module.exports = {Type_user}
+async function verficiarDatos() {
+   const typeUser = await Type_user.findAll();
+   if (typeUser.length == 0) {
+      await Type_user.create({ description: 'admin' })
+      await Type_user.create({ description: 'paciente' })
+   };
+}
+
+verficiarDatos();
+
+module.exports = { Type_user }
