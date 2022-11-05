@@ -7,12 +7,18 @@ const { Sentence } = require("../models/Sentence");
 async function getSentenceByIdWord(id_sentence) {
    const query = await Sentence.findOne({
       where: { id_sentence },
-      include: [{ model: Word },{ model: Word }]
+      include: [{ model: Word }, { model: Word }]
    });
    if (query?.dataValues) {
-      const query2 = await Word.findOne({where: {id_word: query.dataValues.pictograma_one}});
-      query.pictograma_one = `${process.env.URL_BASE}${query2.dataValues.icon}`
-      query.pictograma_two = `${process.env.URL_BASE}${query.dataValues.WORD.icon}`;
+      const query2 = await Word.findOne({ where: { id_word: query.dataValues.pictograma_one } });
+      query.pictograma_one = {
+         url: `${process.env.URL_BASE}${query2.dataValues.icon}`,
+         is_correct: true
+      }
+      query.pictograma_two = {
+         url: `${process.env.URL_BASE}${query.dataValues.WORD.icon}`,
+         is_correct: false
+      };
       delete query.dataValues.WORD;
    }
    return query;
