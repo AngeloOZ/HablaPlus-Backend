@@ -3,19 +3,19 @@ const { printToJson } = require('../helpers/printJson');
 const { Word } = require('../models/Word');
 const { Word_learned } = require('../models/Word_learned');
 const { Sentence } = require("../models/Sentence");
-const { renewSentenceUrl } = require('./seentences.controller');
 
-async function getSentenceByIdWord(word) {
-   const current = word.dataValues;
-   const query = await Sentence.findOne({ where: { pictograma_one: current.id_word } });
-   let sentence = undefined;
+async function getSentenceByIdWord(id_sentence) {
+   const query = await Sentence.findOne({
+      where: { id_sentence },
+      include: [{ model: Word },{ model: Word }]
+   });
    if (query?.dataValues) {
-      sentence = await renewSentenceUrl(query);
-      sentence.pictograma_one = sentence.pictograma_one.url
-      sentence.pictograma_two = sentence.pictograma_two.url
-      delete sentence.word_name;
+      const query2 = await Word.findOne({where: {id_word: query.dataValues.pictograma_one}});
+      query.pictograma_one = `${process.env.URL_BASE}${query2.dataValues.icon}`
+      query.pictograma_two = `${process.env.URL_BASE}${query.dataValues.WORD.icon}`;
+      delete query.dataValues.WORD;
    }
-   return sentence;
+   return query;
 }
 
 const registerWordLearned = async (req = request, res = response) => {
@@ -30,21 +30,23 @@ const registerWordLearned = async (req = request, res = response) => {
 
 const getWordsLearnedByUser = async (req = request, res = response) => {
    try {
-      const { id } = req.params;
+      const id = req.currentToken.id_user;
       const wordsAll = await Word_learned.findAll({
          where: {
-            id_user: id
-         },
+            id_user: id,
+         }
       });
-      let resultWordsLearned = [];
+      const query1 = await Sentence.findAll({ attributes: ['pictograma_one', 'id_sentence'] });
+      const listSentences = query1.map(sen => sen.dataValues);
 
+      let resultWordsLearned = [];
       for (const word of wordsAll) {
-         const curr = await getSentenceByIdWord(word);
-         if(curr){
+         const current = listSentences.find(sen => sen.pictograma_one == word.dataValues.id_word)
+         if (current) {
+            const curr = await getSentenceByIdWord(current.id_sentence);
             resultWordsLearned = [...resultWordsLearned, curr];
          }
       }
-      
       res.status(200).json(printToJson(200, 'succes', resultWordsLearned));
    } catch (error) {
       return res.status(500).json(printToJson(500, error.message));
@@ -52,13 +54,13 @@ const getWordsLearnedByUser = async (req = request, res = response) => {
 }
 
 const getWordsByUser = async (req = request, res = response) => {
-   const { id } = req.params;
+   const id = req.currentToken.id_user;
    const wordsAll = await Word_learned.findAll({
       where: {
          id_user: id
       },
    });
-
+   console.log(wordsAll)
    let resultWordsLearned = [];
 
    for (const word of wordsAll) {

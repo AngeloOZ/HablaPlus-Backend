@@ -38,6 +38,7 @@ const authLogin = async (req = request, res = response) => {
             }
             const token = await singToken(payload, "1d");
             payload.token = token;
+
             return res.status(200).json(payload);
          }
          return res.status(404).json(printToJson(404, "The user or password are wrong"));
