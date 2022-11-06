@@ -26,8 +26,9 @@ async function getSentenceByIdWord(id_sentence) {
 
 const registerWordLearned = async (req = request, res = response) => {
    try {
-      const { id_user, id_word } = req.body;
-      await Word_learned.create({ id_user, id_word });
+      const id = req.currentToken.id_user;
+      const { id_word } = req.body;
+      await Word_learned.create({ id_user: id, id_word });
       res.status(200).json(printToJson(200, 'success'));
    } catch (error) {
       res.status(500).json(printToJson(500, error.message, error));

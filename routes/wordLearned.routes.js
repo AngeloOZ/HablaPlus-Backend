@@ -10,7 +10,7 @@ const router = Router();
 
 router.get('/user', validateToken, checkRols([2]), valideIdwordLearned, getWordsByUser);
 router.get('/user/sentences', validateToken, checkRols([2]), valideIdwordLearned, getWordsLearnedByUser);
-router.post('/', validateInsertWordLearned, registerWordLearned);
+router.post('/', validateToken, checkRols([2]), validateInsertWordLearned, registerWordLearned);
 
 
 module.exports = router;
