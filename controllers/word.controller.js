@@ -62,13 +62,16 @@ const getWordByIdUnique = async (req = request, res = response) => {
          wordsResult.current.icon = `${process.env.URL_BASE}${wordsResult.current.icon}`;
          wordsResult.current.audio = `${process.env.URL_BASE}${wordsResult.current.audio}`;
 
-         wordsResult.next.icon = `${process.env.URL_BASE}${wordsResult.next.icon}`;
-         wordsResult.next.audio = `${process.env.URL_BASE}${wordsResult.next.audio}`;
+         if(wordsResult.next){
+            wordsResult.next.icon = `${process.env.URL_BASE}${wordsResult.next.icon}`;
+            wordsResult.next.audio = `${process.env.URL_BASE}${wordsResult.next.audio}`;
+         }
 
          return res.status(200).json(printToJson(200, "success", wordsResult));
       }
       return res.status(404).json(printToJson(404, `word no found with id: ${id}`));
    } catch (error) {
+      console.log(error);
       return errorsSequelize(res, error);
    }
 }
