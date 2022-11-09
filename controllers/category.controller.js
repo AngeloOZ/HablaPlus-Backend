@@ -7,7 +7,7 @@ const { ShowByCategory } = require('../models/Word');
 const getCategories = async (req = request, res = response) => {
    try {
       const categories = await CategoryModel.Show();
-      if (categories.length != 0){
+      if (categories.length != 0) {
          for (const category of categories) {
             category.icon = `${process.env.URL_BASE}${category.icon}`;
             category.icon2 = `${process.env.URL_BASE}${category.icon2}`;
@@ -77,7 +77,9 @@ const insertCategory = async (req = request, res = response) => {
 
 const updateCategory = async (req = request, res = response) => {
    try {
-      const { description, icon, icon2, id_category } = req.body;
+      const { description, icon: iconAux, icon2: iconAux2, id_category } = req.body;
+      const icon = iconAux.replace(process.env.URL_BASE, "");
+      const icon2 = iconAux2.replace(process.env.URL_BASE, "");
       const category = await CategoryModel.Update({ id_category, description, icon, icon2 });
       return res.status(200).json(printToJson(200, "success", category));
    } catch (error) {

@@ -88,8 +88,11 @@ const insertWord = async (req = request, res = response) => {
 
 const updateWord = async (req = request, res = response) => {
    try {
-      const { id_word, id_category, description, icon, audio } = req.body;
-      const word = WordModel.ShowById(id_word);
+      const { id_word, id_category, description, icon: iconAux, audio: audioAux } = req.body;
+      
+      const icon = iconAux.replace(process.env.URL_BASE, "");
+      const audio = audioAux.replace(process.env.URL_BASE, "");
+
       const category = await WordModel.Update({ id_word, id_category, description, icon, audio });
 
       return res.status(200).json(printToJson(200, "success", category));
