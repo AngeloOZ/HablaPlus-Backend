@@ -17,6 +17,11 @@ const Category = sequelize.define('CATEGORY', {
       type: DataTypes.STRING,
       allowNull: false
    },
+   icon2: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: ""
+   },
    id_unique: {
       type: DataTypes.STRING,
       defaultValue: Sequelize.UUIDV4
@@ -45,6 +50,7 @@ Word.belongsTo(Category, {
 * @property {Number} [id_category] El Id de la categoria
 * @property {String} description El nombre de la categoria
 * @property {String} icon Url de la imagen de la categoria
+* @property {String} icon2 Url de la imagen de la categoria
 */
 
 /**
@@ -125,6 +131,7 @@ const Update = async (newCategory) => {
       const category = await Category.findByPk(newCategory.id_category);
       category.description = newCategory.description;
       category.icon = newCategory.icon;
+      category.icon2 = newCategory.icon2;
       await category.save();
       await transaction.commit();
       return category;

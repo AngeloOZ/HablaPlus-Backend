@@ -10,6 +10,7 @@ const getCategories = async (req = request, res = response) => {
       if (categories.length != 0){
          for (const category of categories) {
             category.icon = `${process.env.URL_BASE}${category.icon}`;
+            category.icon2 = `${process.env.URL_BASE}${category.icon2}`;
          }
          return res.status(200).json(printToJson(200, "success", categories));
       }
@@ -27,6 +28,7 @@ const getCategoryById = async (req = request, res = response) => {
       const category = await CategoryModel.ShowById(id);
       if (category) {
          category.icon = `${process.env.URL_BASE}${category.icon}`;
+         category.icon2 = `${process.env.URL_BASE}${category.icon2}`;
          return res.status(200).json(printToJson(200, "success", category));
       } else {
          return res.status(404).json(printToJson(404, "category no found"));
@@ -65,8 +67,8 @@ const getWordByCategory = async (req = request, res = response) => {
 
 const insertCategory = async (req = request, res = response) => {
    try {
-      const { description, icon } = req.body;
-      const category = await CategoryModel.Insert({ description, icon });
+      const { description, icon, icon2 } = req.body;
+      const category = await CategoryModel.Insert({ description, icon, icon2 });
       return res.status(200).json(printToJson(200, "success", category));
    } catch (error) {
       return res.status(500).json(printToJson(500, error.message));
@@ -75,8 +77,8 @@ const insertCategory = async (req = request, res = response) => {
 
 const updateCategory = async (req = request, res = response) => {
    try {
-      const { description, icon, id_category } = req.body;
-      const category = await CategoryModel.Update({ id_category, description, icon });
+      const { description, icon, icon2, id_category } = req.body;
+      const category = await CategoryModel.Update({ id_category, description, icon, icon2 });
       return res.status(200).json(printToJson(200, "success", category));
    } catch (error) {
       console.log(error.message)

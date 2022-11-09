@@ -15,6 +15,13 @@ const validateInsertCategory = [
       .notEmpty()
       .withMessage("icon must not be empty")
       .trim(),
+   check('icon2')
+      .exists()
+      .withMessage("icon is required")
+      .bail()
+      .notEmpty()
+      .withMessage("icon must not be empty")
+      .trim(),
    (req, res, next) => validateResult(req, res, next)
 ];
 
@@ -34,6 +41,13 @@ const validateUpdateCategory = [
       .notEmpty()
       .toLowerCase().trim(),
    check('icon')
+      .exists()
+      .withMessage("icon is required")
+      .bail()
+      .notEmpty()
+      .withMessage("icon must not be empty")
+      .trim(),
+   check('icon2')
       .exists()
       .withMessage("icon is required")
       .bail()
