@@ -8,11 +8,11 @@ const { getVideos, getVideoById, insertVideo, updateVideo, deleteVideo, getVideo
 const router = Router();
 
 router.get('/', validateToken, getVideos)
-router.get('/cliente', getVideos)
+router.get('/cliente', validateToken, getVideos)
 router.get('/:id', validateToken, validateIdVideo, getVideoById);
 router.get('/unique/:id', validateToken, validateIdUniqueVideo, getVideoByUnique);
 router.post('/', validateToken, checkRols([1]), validateInsertVideo, insertVideo);
-router.put('/', validateToken, validateInsertVideo, updateVideo);
-router.delete('/:id', validateToken, validateIdVideo, deleteVideo);
+router.put('/', validateToken, checkRols([1]), validateInsertVideo, updateVideo);
+router.delete('/:id', validateToken, checkRols([1]), validateIdVideo, deleteVideo);
 
 module.exports = router;

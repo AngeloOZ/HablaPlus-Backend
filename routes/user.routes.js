@@ -6,11 +6,11 @@ const validateToken = require('../middlewares/verifyToken');
 
 const router = Router();
 
-router.get('/', getUsers)
-router.get('/:id', validateIdUser, getUserById);
-router.post('/', validateInsertUser, insertUser);
-router.put('/', validateUpdateUser, updateUser);
+router.get('/', validateToken, getUsers)
+router.get('/:id', validateToken, checkRols([1, 2]), validateIdUser, getUserById);
+router.post('/', validateToken, checkRols([1]), validateInsertUser, insertUser);
+router.put('/', validateToken, checkRols([1]), validateUpdateUser, updateUser);
 router.put('/client', validateToken, checkRols([2]), validateUpdateUserClient, updateUserClient);
-router.delete('/:id', validateIdUser, deleteUser);
+router.delete('/:id', validateToken, checkRols([1]), validateIdUser, deleteUser);
 
 module.exports = router;
