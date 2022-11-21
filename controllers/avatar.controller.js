@@ -15,7 +15,7 @@ const getCurrentAvatar = async (id) => {
       },
       include: Avatar,
    });
-   return request.AVATAR.url;
+   return request?.AVATAR?.url;
 }
 
 async function renovarToken(user) {

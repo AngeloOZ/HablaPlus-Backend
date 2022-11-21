@@ -41,7 +41,7 @@ const authLogin = async (req = request, res = response) => {
 
             return res.status(200).json(payload);
          }
-         return res.status(404).json(printToJson(404, "The user or password are wrong"));
+         return res.status(404).json(printToJson(404, "The user or password are wrong 0"));
       }
       return res.status(404).json(printToJson(404, "The user or password are wrong 1"));
    } catch (error) {

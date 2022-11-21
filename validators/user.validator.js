@@ -36,7 +36,6 @@ const validateInsertUser = [
       .notEmpty()
       .withMessage('username must not be empty')
       .bail()
-      .isAlphanumeric()
       .trim(),
    check('password')
       .exists()
@@ -45,7 +44,6 @@ const validateInsertUser = [
       .notEmpty()
       .withMessage('password must not be empty')
       .bail()
-      .isAlphanumeric()
       .trim(),
    check('id_type')
       .exists()
@@ -104,14 +102,12 @@ const validateUpdateUser = [
       .notEmpty()
       .withMessage('username must not be empty')
       .bail()
-      .isAlphanumeric()
       .trim(),
    check('newPassword')
       .optional()
       .notEmpty()
       .withMessage('password must not be empty')
       .bail()
-      .isAlphanumeric()
       .trim(),
    check('id_type')
       .exists()
@@ -170,14 +166,12 @@ const validateUpdateUserClient = [
       .notEmpty()
       .withMessage('username must not be empty')
       .bail()
-      .isAlphanumeric()
       .trim(),
    check('newPassword')
       .optional()
       .notEmpty()
       .withMessage('password must not be empty')
       .bail()
-      .isAlphanumeric()
       .trim(),
    (req, res, next) => validateResult(req, res, next)
 ];
@@ -229,7 +223,7 @@ const validateRegisterUser = [
       .notEmpty()
       .withMessage('username must not be empty')
       .bail()
-      .isAlphanumeric(),
+      .trim(),
    check('password')
       .exists()
       .withMessage('password is required')
@@ -237,7 +231,6 @@ const validateRegisterUser = [
       .notEmpty()
       .withMessage('password must not be empty')
       .bail()
-      .isAlphanumeric()
       .trim(),
    (req, res, next) => validateResult(req, res, next)
 ];
@@ -250,7 +243,7 @@ const validateLogin = [
       .notEmpty()
       .withMessage('username must not be empty')
       .bail()
-      .isAlphanumeric(),
+      .trim(),
    check('password')
       .exists()
       .withMessage('password is required')
@@ -258,7 +251,6 @@ const validateLogin = [
       .notEmpty()
       .withMessage('password must not be empty')
       .bail()
-      .isAlphanumeric()
       .trim(),
    (req, res, next) => validateResult(req, res, next)
 ];
